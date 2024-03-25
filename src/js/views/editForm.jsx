@@ -1,20 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { Context } from "../store/appContext";
 
 import "../../styles/demo.css";
 
-export const Demo = () => {
+export const EditForm = () => {
 	const { store, actions } = useContext(Context);
-	const [fullname, setFullName] = useState(""); // crear estado
-	const [emailAdress, setEmailAdress] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [streetAddress, setStreetAddress] = useState("");
+	const [fullname, setFullName] = useState("Nombre"); // crear estado
+	const [emailAdress, setEmailAdress] = useState("Email");
+	const [phoneNumber, setPhoneNumber] = useState("Telefono");
+	const [streetAddress, setStreetAddress] = useState("Address");
+    const { id } = useParams();
+    
+    useEffect(() => {
+        actions.getSingleContact(id);
+        setFullName(store.contact.full_name);
+        setEmailAdress(store.contact.email);
+        setPhoneNumber(store.contact.phone);
+        setStreetAddress(store.contact.address);
+    }, []);
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		actions.createContact(fullname, emailAdress, streetAddress, phoneNumber);
+		actions.editContact(fullname, emailAdress, streetAddress, phoneNumber, id);
 		setFullName("");
 		setEmailAdress("");
 		setPhoneNumber("");
